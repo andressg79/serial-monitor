@@ -10,6 +10,10 @@ type PortLister interface {
 	List() error
 }
 
+// List returns a cobra command for listing available serial ports.
+//
+// It takes a PortLister interface as a parameter.
+// It returns a pointer to a cobra Command.
 func List(lister PortLister) *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",

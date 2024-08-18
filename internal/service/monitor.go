@@ -1,88 +1,48 @@
 package service
 
-import (
-	"fmt"
-	"log"
-	"strings"
+import "fmt"
 
-	"github.com/buger/goterm"
-	"github.com/gosuri/uilive"
-	"go.bug.st/serial"
-)
-
-type Monitor struct {
+type SerialMonitor interface {
+	Connect(portName string, buad int) (bool, error)
+	ReadToFun(bufferSize int, into func(buff []byte) error) error
 }
 
-func NewMonitor() Monitor {
-	return Monitor{}
+type HeaderShower interface {
+	Show(port string, buad int)
+}
+
+type MonitorShower interface {
+	Listener(buff []byte) error
+	Show()
+}
+
+type Monitor struct {
+	serial SerialMonitor
+	header HeaderShower
+	shower MonitorShower
+}
+
+func NewMonitor(serial SerialMonitor, header HeaderShower, shower MonitorShower) Monitor {
+	return Monitor{
+		serial: serial,
+		header: header,
+		shower: shower,
+	}
 }
 
 func (m Monitor) Run(portName string, buad int) error {
-	if !m.validPort(portName) {
-		return fmt.Errorf("port %s not found", portName)
-	}
-
-	mode := &serial.Mode{
-		BaudRate: buad,
-	}
-	port, err := serial.Open(portName, mode)
+	connected, err := m.serial.Connect(portName, buad)
 	if err != nil {
 		return err
 	}
 
-	buffer := make(chan string)
-	go func() {
-		var localBuffer string = ""
-		buff := make([]byte, 100)
-		for {
-			n, err := port.Read(buff)
-			if err != nil {
-				log.Fatal(err)
-				break
-			}
-			if n == 0 {
-				break
-			}
-			localBuffer += string(buff[:n])
-			if strings.Contains(localBuffer, "\n") {
-				toChannel, _ := strings.CutSuffix(localBuffer, "\n")
-				buffer <- toChannel
-				localBuffer, _ = strings.CutPrefix(localBuffer, "\n")
-			}
-		}
-	}()
-
-	m.ClearScreen()
-	writer := uilive.New()
-	defer func() {
-		writer.Stop()
-	}()
-
-	for {
-		s := <-buffer
-		s = strings.ReplaceAll(s, "\n", "")
-		s = strings.ReplaceAll(s, "\r", "")
-		fmt.Fprintf(writer, "%s\n", s)
-		writer.Flush()
-	}
-}
-
-func (m Monitor) validPort(port string) bool {
-	ports, err := serial.GetPortsList()
-	if err != nil {
-		return false
+	if !connected {
+		return fmt.Errorf("not connected")
 	}
 
-	for _, p := range ports {
-		if p == port {
-			return true
-		}
-	}
-	return false
-}
+	m.header.Show(portName, buad)
 
-func (m Monitor) ClearScreen() {
-	goterm.Clear()
-	goterm.MoveCursor(1, 1)
-	goterm.Flush()
+	go m.serial.ReadToFun(1, m.shower.Listener)
+	m.shower.Show()
+	return nil
 }
