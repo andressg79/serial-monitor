@@ -1,31 +1,37 @@
-# Serial Monitor
+# Serial Monitor (WIP)
 
-¿Cansado de revisar manualmente los datos de tu puerto serie? Esta herramienta te simplifica la vida. Visualiza de manera clara y concisa los datos que circulan por tu puerto, permitiéndote enfocarte en la lógica de tu proyecto. Personaliza la visualización según tus necesidades y descubre rápidamente cualquier anomalía en la comunicación.
+Tired of manually checking your serial port data? This tool makes your life easier. It displays the data flowing through your port in a clear and concise way, allowing you to focus on the logic of your project. Customize the display to your needs and quickly discover any communication anomalies.
 
-La aplicación está pensada para complementar el desarrollo de aplicaciones en microcontroladores (Arduino, Raspberry Pi, etc.), permite visualizar datos seriales de forma personalizada. Selecciona la estrategia de visualización que mejor se adapte a tu flujo de datos: modo serial clásico, línea única con actualización por salto de línea, o salto de página con actualización automática de consola.
+The application is designed to complement the development of applications on microcontrollers (Arduino, Raspberry Pi, etc.), allowing you to display serial data in a customized way. Select the display strategy that best suits your data flow: classic serial mode, single line with line break update, or page break with automatic console update.
 
-## Instalación
+## ToDo
 
-Instala la aplicación con `go install github.com/andressg79/serial-monitor`
+- [ ] Display page of data, using a string as a break indicator.
+- [ ] Hot keys to pause and resume the display.
+- [ ] Auto reconnect ports.
+- [ ] Automatic port scanning.
+- [ ] Display multiple ports at once.
 
-## Ejemplos
+## Compilation
 
-### Ayuda
+To compile the application, use the command `go build -o serial-monitor`
+
+## Examples
+
+### Help
 
 ```bash
 serial-monitor help
 ```
 
-### Lista los puertos
+### List ports
 
 ```bash
 serial-monitor list
 ```
 
-### Monitor un puerto
+### Monitor a port
 
 ```bash
 serial-monitor monitor -p /dev/ttyUSB0 -b 9600
 ```
-
-
