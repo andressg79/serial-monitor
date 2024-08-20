@@ -31,6 +31,5 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.run_number }}
           body: Automatic release created by GitHub Actions# This workflow will build a golang project
-
-    - name: Test
-      run: go test -v ./...
+          run: |
+            goreleaser release --snapshot
