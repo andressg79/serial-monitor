@@ -41,8 +41,9 @@ func (m Monitor) Run(portName string, buad int) error {
 	}
 
 	m.header.Show(portName, buad)
-
-	go m.serial.ReadToFun(1, m.shower.Listener)
+	go func() {
+		_ = m.serial.ReadToFun(1, m.shower.Listener)
+	}()
 	m.shower.Show()
 	return nil
 }

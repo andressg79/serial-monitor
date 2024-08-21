@@ -26,6 +26,6 @@ func (i *InfiniteShower) Show() {
 
 	for {
 		s := <-i.Buffer
-		fmt.Fprintf(i.Writer, s)
+		fmt.Fprint(i.Writer, s)
 	}
 }

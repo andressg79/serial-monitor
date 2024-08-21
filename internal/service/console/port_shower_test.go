@@ -70,7 +70,7 @@ func TestPortShower_Show(t *testing.T) {
 
 			// read the output of the command
 			var buf bytes.Buffer
-			io.Copy(&buf, r)
+			_, _ = io.Copy(&buf, r)
 			captured := buf.String()
 
 			// Assert

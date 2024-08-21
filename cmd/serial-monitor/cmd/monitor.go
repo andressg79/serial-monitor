@@ -59,7 +59,7 @@ func Monitor(showers []string, monitors map[string]func() service.Monitor) *cobr
 	cmdMonitor.Flags().StringVarP(&port, "port", "p", "", "Path or name of serial port")
 	cmdMonitor.Flags().IntVarP(&buad, "buad", "b", 9600, "Connection buadrate")
 	cmdMonitor.MarkFlagsRequiredTogether("port", "buad")
-	cmdMonitor.MarkFlagRequired("port")
+	_ = cmdMonitor.MarkFlagRequired("port")
 	cmdMonitor.Flags().StringVarP(&shower, "shower", "s", "classic", "Shower mode")
 
 	return cmdMonitor
