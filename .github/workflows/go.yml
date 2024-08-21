@@ -17,18 +17,22 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: Test
-        run: go test ./...
+        
       - name: Lint
         uses: golangci/golangci-lint-action@v6
-        with:
-          go-version: ${{ env.GO_VERSION }}
+
       - name: Vet
         run: go vet ./...
-      - name: Coverage
-        run: |
-          go test -coverprofile=coverage.txt ./...
-          bash <(curl -s https://raw.githubusercontent.com/jacobl/go-coverage-report/master/report.sh)
+
+      - name: Test and coverage
+        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+    
+      - name: check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          # Configure action using config file (option 1)
+          config: ./.testcoverage.yml
+
       - name: Create Release
         uses: actions/create-release@v1
         id: create_release
