@@ -20,3 +20,4 @@ vet:
 
 test:
 	go test ./...
+

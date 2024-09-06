@@ -3,7 +3,7 @@ package console
 import "strings"
 
 type baseShower struct {
-	X,Y        int
+	X, Y        int
 	CuterString string
 	Buffer      chan string
 	LocalBuffer string

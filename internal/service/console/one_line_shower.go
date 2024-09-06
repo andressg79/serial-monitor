@@ -22,7 +22,7 @@ func NewOneLineShower(x, y int, writer Writer, cleanFunc func(x, y int)) *OneLin
 			Y:         y,
 			Buffer:    make(chan string),
 			CleanFunc: cleanFunc,
-			Writer:    writer,	
+			Writer:    writer,
 		},
 	}
 }
